@@ -21,7 +21,13 @@ async function main() {
   await voting.deployed();
 
   // Print the contract address
-  console.log("Voting contract deployed to:", voting.address);
+  console.log("Contract deployment: Voting Contract");
+  console.log("Contract deployed to:", voting.address);
+  console.log("Transaction hash:", voting.deployTransaction.hash);
+  console.log("Contract options:", options)
+  console.log("From:", await voting.deployTransaction.from)
+  console.log("Gas used by deployment:", await voting.deployTransaction.gasLimit.toString())
+  console.log("Block number:", await voting.deployTransaction.blockNumber)
 }
 
 // Run the script
