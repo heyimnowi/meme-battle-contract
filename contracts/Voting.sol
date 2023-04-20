@@ -35,4 +35,53 @@ contract Voting {
         // Mark the sender as a voter
         voters[msg.sender] = true;
     }
+
+    // Define a function to return the array of options
+    function getOptionsNames() public view returns (string[] memory) {
+        string[] memory optionNames = new string[](options.length);
+        for (uint256 i = 0; i < options.length; i++) {
+            optionNames[i] = options[i].name;
+        }
+        return optionNames;
+    }
+
+    // Define a function to return the total number of votes
+    function getTotalVotes() public view returns (uint256) {
+        uint256 totalVotes = 0;
+        for (uint256 i = 0; i < options.length; i++) {
+            totalVotes += options[i].count;
+        }
+        return totalVotes;
+    }
+
+    function getTotalVotesByOption() public view returns (Option[] memory) {
+        return options;
+    }
+
+    function getOptionNameByIndex(uint256 optionIndex)
+        public
+        view
+        returns (string memory)
+    {
+        return options[optionIndex].name;
+    }
+
+    function getTotalVotesById(uint256 optionId)
+        public
+        view
+        returns (uint256)
+    {
+        return options[optionId].count;
+    }
+
+    // Define a function to return the winning option
+    function getWinningOption() public view returns (Option memory) {
+        Option memory winningOption = options[0];
+        for (uint256 i = 1; i < options.length; i++) {
+            if (options[i].count > winningOption.count) {
+                winningOption = options[i];
+            }
+        }
+        return winningOption;
+    }
 }

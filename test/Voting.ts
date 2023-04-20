@@ -1,47 +1,78 @@
+import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("Voting", function () {
-	it("Should return the right option count", async function () {
+	let voting: any;
+	const options = ["Option A", "Option B", "Option C"];
+
+	beforeEach(async function () {
 		// Compile the contract
 		const Voting = await ethers.getContractFactory("Voting");
-		const options = ["Option A", "Option B", "Option C"];
-		const voting = await Voting.deploy(options);
+		voting = await Voting.deploy(options);
 
 		// Wait for the contract to be deployed
 		await voting.deployed();
 
-		// Vote for an option
 		const optionIndex = 0;
 		const signer = (await ethers.getSigners())[0];
 		await voting.connect(signer).vote(optionIndex);
+	});
 
-		// Print the updated vote counts
-		console.log("Vote counts:");
-		for (let i = 0; i < options.length; i++) {
-			const option = await voting.options(i);
-			console.log(`${option.name}: ${option.count}`);
-		}
+	it("Should return the right options", async function () {
+		voting.getOptionsNames().then((result: any) => {
+			expect(result).to.equal(options);
+		});
+	});
+
+	it("Should return the right option count", async function () {
+		voting.getTotalVotes().then((result: any) => {
+			expect(result).to.equal(1);
+		});
 	});
 
 	it("should allow user to only vote once", async function () {
-		// Compile the contract
-		const Voting = await ethers.getContractFactory("Voting");
-		const options = ["Option A", "Option B", "Option C"];
-		const voting = await Voting.deploy(options);
-
-		// Wait for the contract to be deployed
-		await voting.deployed();
-
-		// Vote for an option
-		const optionIndex = 0;
-		const signer = (await ethers.getSigners())[0];
-		await voting.connect(signer).vote(optionIndex);
-
-		// Print the updated vote counts
-		console.log("Vote counts:");
-		for (let i = 0; i < options.length; i++) {
-			const option = await voting.options(i);
-			console.log(`${option.name}: ${option.count}`);
+		try {
+			const optionIndex = 0;
+			const signer = (await ethers.getSigners())[0];
+			await voting.connect(signer).vote(optionIndex);
+		} catch (error) {
+			const errorObj = error as Error;
+			console.log(errorObj.message);
 		}
+
+		voting.getTotalVotes().then((result: any) => {
+			expect(result).to.equal(1);
+		});
 	});
+
+	it("should return all the options with their vote counts", async function () {
+		const expectedVotes = [
+			{
+				name: "Option A",
+				votes: 1,
+			},
+			{
+				name: "Option B",
+				votes: 0,
+			},
+			{
+				name: "Option C",
+				votes: 0,
+			}
+		];
+
+		voting.getTotalVotesByOption().then((result: any) => {
+			expect(result).to.equal(expectedVotes);
+		});
+	});
+
+	it("should return the winning option", async function () {
+		voting.getWinningOption().then((result: any) => {
+			expect(result).to.equal({
+				name: "Option A",
+				votes: 1,
+			});
+		});
+	});
+
 });
