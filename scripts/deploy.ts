@@ -3,7 +3,18 @@ import { ethers } from "hardhat";
 async function main() {
   // Compile the contract
   const Voting = await ethers.getContractFactory("Voting");
-  const options = ["Option A", "Option B", "Option C"];
+  const options = [
+    "Distracted Boyfriend",
+    "One Does Not Simply",
+    "Mocking Spongebob",
+    "Two Buttons",
+    "Change My Mind",
+    "Surprised Pikachu",
+    "Expanding Brain",
+    "Unsettled Tom",
+    "Drake Hotline Bling",
+    "Ancient Aliens"
+  ];
   const voting = await Voting.deploy(options);
 
   // Wait for the contract to be deployed
