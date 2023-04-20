@@ -12,8 +12,7 @@ async function main() {
     "Surprised Pikachu",
     "Expanding Brain",
     "Unsettled Tom",
-    "Drake Hotline Bling",
-    "Ancient Aliens"
+    "Drake Hotline Bling"
   ];
   const voting = await Voting.deploy(options);
 

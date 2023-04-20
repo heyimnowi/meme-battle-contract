@@ -37,12 +37,8 @@ contract Voting {
     }
 
     // Define a function to return the array of options
-    function getOptionsNames() public view returns (string[] memory) {
-        string[] memory optionNames = new string[](options.length);
-        for (uint256 i = 0; i < options.length; i++) {
-            optionNames[i] = options[i].name;
-        }
-        return optionNames;
+    function getOptions() public view returns (Option[] memory) {
+        return options;
     }
 
     // Define a function to return the total number of votes
@@ -52,26 +48,6 @@ contract Voting {
             totalVotes += options[i].count;
         }
         return totalVotes;
-    }
-
-    function getTotalVotesByOption() public view returns (Option[] memory) {
-        return options;
-    }
-
-    function getOptionNameByIndex(uint256 optionIndex)
-        public
-        view
-        returns (string memory)
-    {
-        return options[optionIndex].name;
-    }
-
-    function getTotalVotesById(uint256 optionId)
-        public
-        view
-        returns (uint256)
-    {
-        return options[optionId].count;
     }
 
     // Define a function to return the winning option
