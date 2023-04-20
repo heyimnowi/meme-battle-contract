@@ -1,4 +1,22 @@
 {
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "heyimnowi",
+  "description": "A simple hardhat project",
+  "keywords": [
+    "hardhat",
+    "ethereum",
+    "solidity",
+    "starter"
+  ],
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "coverage": "hardhat coverage",
+    "deploy": "hardhat run scripts/deploy.ts",
+    "lint": "hardhat check",
+    "lint:fix": "hardhat check --fix"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
