@@ -19,8 +19,9 @@ describe("Voting", function () {
 	});
 
 	it("Should return the right options", async function () {
-		voting.getOptionsNames().then((result: any) => {
-			expect(result).to.equal(options);
+		voting.getOptions().then((result: any) => {
+			const names = result.map((option: any) => option.name);
+			expect(names).to.equal(options);
 		});
 	});
 
@@ -61,7 +62,7 @@ describe("Voting", function () {
 			}
 		];
 
-		voting.getTotalVotesByOption().then((result: any) => {
+		voting.getOptions().then((result: any) => {
 			expect(result).to.equal(expectedVotes);
 		});
 	});

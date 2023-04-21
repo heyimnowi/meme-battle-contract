@@ -6,12 +6,9 @@ async function main() {
   const options = [
     "Distracted Boyfriend",
     "One Does Not Simply",
-    "Mocking Spongebob",
     "Two Buttons",
     "Change My Mind",
-    "Surprised Pikachu",
     "Expanding Brain",
-    "Unsettled Tom",
     "Drake Hotline Bling"
   ];
   const voting = await Voting.deploy(options);
