@@ -1,17 +1,22 @@
-# voting-app
+# meme-battle-contract
 
-Voting App is a simple DApp that allows users to vote on a list of candidates. The app is built using Solidity.
+🎉 Welcome to Meme Battle Royale! 🎉
 
-🌟 Run it
+This is a pet project for testing Solidity, where you can vote for your favorite meme and see which one comes out on top!
 
-To make sure everything is working, run:
+## How to Run
+ 
+1. Clone the repo: `git clone https://github.com/heyimnowi/meme-battle-contract.git`
+2. Navigate to the project directory: `cd meme-battle-contract`
+3. Install the dependencies: `npm install`
+4. Compile the contracts: `npm run compile`
+5. Deploy the contracts to the Sepolia network: `npm run deploy:sepolia`
 
-```
-npx hardhat compile
-```
+## How to Test
 
-Then run:
+Run the tests: `npm run test`
 
-```
-npx hardhat test
-```
+## How to Lint
+
+Lint the code: `npm run lint`
+
