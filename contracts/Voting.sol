@@ -14,15 +14,22 @@ contract Voting {
     // Define a mapping to keep track of who has voted
     mapping(address => bool) public voters;
 
-    // Define a constructor to add the vote options
-    constructor(string[] memory optionNames) {
+    // Define a variable to store the expiry date
+    uint256 public expiryDate;
+
+    // Define a constructor to add the vote options and expiry date
+    constructor(string[] memory optionNames, uint256 _expiryDate) {
         for (uint256 i = 0; i < optionNames.length; i++) {
             options.push(Option(optionNames[i], 0));
         }
+        expiryDate = _expiryDate;
     }
 
     // Define a function to vote for a given option
     function vote(uint256 optionIndex) public {
+        // Check if the contract has expired
+        require(block.timestamp < expiryDate, "Voting has expired");
+
         // Check if the sender has already voted
         require(!voters[msg.sender], "You have already voted");
 

@@ -1,20 +1,19 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("Voting", function () {
-	let voting: any;
+	const expiryDate = Math.floor(Date.now() / 1000) + 60 * 60 * 24;
+	const optionIndex = 0;
 	const options = ["Option A", "Option B", "Option C"];
+	let signer: SignerWithAddress;
+	let voting: any;
 
 	beforeEach(async function () {
-		// Compile the contract
 		const Voting = await ethers.getContractFactory("Voting");
-		voting = await Voting.deploy(options);
-
-		// Wait for the contract to be deployed
+		voting = await Voting.deploy(options, expiryDate);
 		await voting.deployed();
-
-		const optionIndex = 0;
-		const signer = (await ethers.getSigners())[0];
+		signer = (await ethers.getSigners())[0];
 		await voting.connect(signer).vote(optionIndex);
 	});
 
@@ -31,7 +30,7 @@ describe("Voting", function () {
 		});
 	});
 
-	it("should allow user to only vote once", async function () {
+	it("should not allow multiple votes from the same address", async function () {
 		try {
 			const optionIndex = 0;
 			const signer = (await ethers.getSigners())[0];
@@ -76,4 +75,15 @@ describe("Voting", function () {
 		});
 	});
 
+	// TODO: Fix this test
+	// it("should not allow voting after the expiry date", async function () {
+	// 	const currentBlockTimestamp = await ethers.provider.getBlock("latest").then(block => block.timestamp);
+	// 	await network.provider.send("evm_increaseTime", [604800]);
+	// 	await network.provider.send("evm_mine", []);
+	// 	await expect(voting.vote(0)).to.be.revertedWith("Voting has expired");
+	// 	const options = await voting.getOptions();
+	// 	expect(options[0].count).to.equal(0);
+	// 	const totalVotes = await voting.getTotalVotes();
+	// 	expect(totalVotes).to.equal(0);
+	// });
 });
