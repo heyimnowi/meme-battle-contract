@@ -18,7 +18,7 @@ describe("Voting", function () {
 	});
 
 	it("Should return the right options", async function () {
-		voting.getOptions().then((result: any) => {
+		voting.getVotes().then((result: any) => {
 			const names = result.map((option: any) => option.name);
 			expect(names).to.equal(options);
 		});
@@ -40,7 +40,7 @@ describe("Voting", function () {
 			console.log(errorObj.message);
 		}
 
-		voting.getTotalVotes().then((result: any) => {
+		voting.totalVotes().then((result: any) => {
 			expect(result).to.equal(1);
 		});
 	});
@@ -61,13 +61,13 @@ describe("Voting", function () {
 			}
 		];
 
-		voting.getOptions().then((result: any) => {
+		voting.getVotes().then((result: any) => {
 			expect(result).to.equal(expectedVotes);
 		});
 	});
 
 	it("should return the winning option", async function () {
-		voting.getWinningOption().then((result: any) => {
+		voting.winningOption().then((result: any) => {
 			expect(result).to.equal({
 				name: "Option A",
 				votes: 1,
@@ -81,9 +81,9 @@ describe("Voting", function () {
 	// 	await network.provider.send("evm_increaseTime", [604800]);
 	// 	await network.provider.send("evm_mine", []);
 	// 	await expect(voting.vote(0)).to.be.revertedWith("Voting has expired");
-	// 	const options = await voting.getOptions();
+	// 	const options = await voting.options();
 	// 	expect(options[0].count).to.equal(0);
-	// 	const totalVotes = await voting.getTotalVotes();
+	// 	const totalVotes = await voting.totalVotes();
 	// 	expect(totalVotes).to.equal(0);
 	// });
 });

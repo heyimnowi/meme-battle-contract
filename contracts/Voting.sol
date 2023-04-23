@@ -2,69 +2,76 @@
 pragma solidity ^0.8.0;
 
 contract Voting {
-    // Define a struct to represent a vote option
     struct Option {
         string name;
         uint256 count;
     }
 
-    // Define an array to store the vote options
-    Option[] public options;
-
-    // Define a mapping to keep track of who has voted
+    bool public resultsDeclared;
     mapping(address => bool) public voters;
-
-    // Define a variable to store the expiry date
+    Option public winningOption;
+    Option[] public votes;
     uint256 public expiryDate;
+    uint256 public totalVotes;
 
-    // Define a constructor to add the vote options and expiry date
     constructor(string[] memory optionNames, uint256 _expiryDate) {
         for (uint256 i = 0; i < optionNames.length; i++) {
-            options.push(Option(optionNames[i], 0));
+            votes.push(Option(optionNames[i], 0));
         }
         expiryDate = _expiryDate;
+        totalVotes = 0;
+    }
+
+    function getVotes () public view returns (Option[] memory) {
+        return votes;
+    }
+
+    function getExpiryDate () public view returns (uint256) {
+        return expiryDate;
+    }
+
+    function getTotalVotes () public view returns (uint256) {
+        return totalVotes;
     }
 
     // Define a function to vote for a given option
     function vote(uint256 optionIndex) public {
-        // Check if the contract has expired
         require(block.timestamp < expiryDate, "Voting has expired");
-
-        // Check if the sender has already voted
         require(!voters[msg.sender], "You have already voted");
-
-        // Check if the option index is valid
-        require(optionIndex < options.length, "Invalid option index");
-
-        // Increment the vote count for the selected option
-        options[optionIndex].count++;
-
-        // Mark the sender as a voter
+        require(optionIndex < votes.length, "Invalid option index");
+        votes[optionIndex].count++;
+        totalVotes++;
         voters[msg.sender] = true;
     }
 
-    // Define a function to return the array of options
-    function getOptions() public view returns (Option[] memory) {
-        return options;
-    }
-
-    // Define a function to return the total number of votes
-    function getTotalVotes() public view returns (uint256) {
-        uint256 totalVotes = 0;
-        for (uint256 i = 0; i < options.length; i++) {
-            totalVotes += options[i].count;
-        }
-        return totalVotes;
-    }
-
-    // Define a function to return the winning option
-    function getWinningOption() public view returns (Option memory) {
-        Option memory winningOption = options[0];
-        for (uint256 i = 1; i < options.length; i++) {
-            if (options[i].count > winningOption.count) {
-                winningOption = options[i];
+    function calculateWinningOption() private {
+        uint256 winningVoteCount = 0;
+        for (uint256 i = 0; i < votes.length; i++) {
+            if (votes[i].count > winningVoteCount) {
+                winningVoteCount = votes[i].count;
+                winningOption = votes[i];
             }
         }
-        return winningOption;
+    }
+
+    // Define a function to declare the results
+    function declareResults() public {
+        require(block.timestamp >= expiryDate, "Voting is still ongoing");
+        require(!resultsDeclared, "Results have already been declared");
+        resultsDeclared = true;
+        calculateWinningOption();  
+    }
+
+    // Define a modifier to check if the contract has expired
+    modifier votingExpired() {
+        require(block.timestamp >= expiryDate, "Voting is still ongoing");
+        _;
+    }
+
+    // Define a function to declare the results using the modifier
+    function declareResultsUsingModifier() public votingExpired {
+        require(!resultsDeclared, "Results have already been declared");
+        resultsDeclared = true;
+        calculateWinningOption();  
     }
 }
